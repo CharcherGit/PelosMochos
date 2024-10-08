@@ -13,8 +13,10 @@ function TiledMap_Load (filepath)
 	spritepath_prefix = ""
 	gTileGfx = {}
 	
-	local tiletype,layers = TiledMap_Parse(filepath)
+	local tiletype, layers, objects = TiledMap_Parse(filepath)
 	gMapLayers = layers
+	gMapObjects = objects
+	
 	for first_gid,path in pairs(tiletype) do 
 		path = spritepath_prefix .. string.gsub(path,"^"..string.gsub(spritepath_removeold,"%.","%%."),"")
 		local raw = love.image.newImageData(path)
@@ -158,19 +160,54 @@ end
 
 function TiledMap_Parse(filename)
 	local xml = LoadXML(love.filesystem.read(filename))
-  gTileWidth, gTileHeight = 16, 16
-  gMapWidth, gMapHeight = 0, 0
-  for k, sub in ipairs(xml) do
-    if sub.label == "map" then
-      gMapWidth = tonumber(sub.xarg.width)
-      gMapHeight = tonumber(sub.xarg.height)
-      gTileWidth = tonumber(sub.xarg.tilewidth)
-      gTileHeight = tonumber(sub.xarg.tileheight)
-      local tiles = getTilesets(sub)
-      local layers = getLayers(sub)
-      return tiles, layers
-    end
-  end
-  return nil, nil
+	gTileWidth, gTileHeight = 16, 16
+	gMapWidth, gMapHeight = 0, 0
+	local objects = {}
+	for k, sub in ipairs(xml) do
+		if sub.label == "map" then
+			gMapWidth = tonumber(sub.xarg.width)
+			gMapHeight = tonumber(sub.xarg.height)
+			gTileWidth = tonumber(sub.xarg.tilewidth)
+			gTileHeight = tonumber(sub.xarg.tileheight)
+			local tiles = getTilesets(sub)
+			local layers = getLayers(sub)
+			objects = getObjects(sub)  -- Nueva función para obtener objetos
+			return tiles, layers, objects
+		end
+	end
+	return nil, nil, nil
+end
+
+-- Nueva función para obtener objetos
+function getObjects(node)
+	local objects = {}
+	for k, sub in ipairs(node) do
+		if sub.label == "objectgroup" and sub.xarg.name == "Colisiones" then
+			for _, obj in ipairs(sub) do
+				if obj.label == "object" then
+					local newObj = {
+						x = tonumber(obj.xarg.x),
+						y = tonumber(obj.xarg.y),
+						width = tonumber(obj.xarg.width),
+						height = tonumber(obj.xarg.height),
+						type = "rectangle"
+					}
+					for _, child in ipairs(obj) do
+						if child.label == "ellipse" then
+							newObj.type = "ellipse"
+							break
+						end
+					end
+					table.insert(objects, newObj)
+				end
+			end
+		end
+	end
+	return objects
+end
+
+-- Modifica esta función para usar los objetos cargados
+function TiledMap_GetCollisionObjects()
+	return gMapObjects or {}
 end
 

@@ -11,7 +11,7 @@ function Player:new(x, y, map)
     local this = {
         x = x,
         y = y,
-        speed = 120,
+        speed = 150,
         size = 120,
         lastShot = 0,
         shootCooldown = 0.5,
@@ -38,19 +38,26 @@ function Player:new(x, y, map)
 end
 
 function Player:update(dt, bullets, bulletPool, camera, enemies)
-    -- Mover jugador
+    local newX, newY = self.x, self.y
     local movement = self.speed * dt
+
     if love.keyboard.isDown("w") then
-        self.y = Utils.clamp(self.y - movement, self.size / 2, self.map.pixelHeight - self.size / 2)
+        newY = newY - movement
     end
     if love.keyboard.isDown("s") then
-        self.y = Utils.clamp(self.y + movement, self.size / 2, self.map.pixelHeight - self.size / 2)
+        newY = newY + movement
     end
     if love.keyboard.isDown("a") then
-        self.x = Utils.clamp(self.x - movement, self.size / 2, self.map.pixelWidth - self.size / 2)
+        newX = newX - movement
     end
     if love.keyboard.isDown("d") then
-        self.x = Utils.clamp(self.x + movement, self.size / 2, self.map.pixelWidth - self.size / 2)
+        newX = newX + movement
+    end
+
+    -- Verificar colisiones antes de actualizar la posición
+    if not self.map:checkCollision(newX - self.size/2, newY - self.size/2, self.size, self.size) then
+        self.x = Utils.clamp(newX, self.size / 2, self.map.pixelWidth - self.size / 2)
+        self.y = Utils.clamp(newY, self.size / 2, self.map.pixelHeight - self.size / 2)
     end
 
     -- Disparo estándar

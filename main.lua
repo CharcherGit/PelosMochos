@@ -17,11 +17,21 @@ local player, enemies, map, camera, ui, titleScreen
 local gameState = "title"
 local music
 
+local SHADOW_OFFSET_X = 5  -- Desplazamiento horizontal de la sombra
+local SHADOW_OFFSET_Y = 5  -- Desplazamiento vertical de la sombra
+
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
     
     -- Initialize Map
     map = Map:new("assets/maps/map01.tmx")  -- Change this to your Tiled map file
+    print("Map loaded")
+    print("gMapLayers:", gMapLayers and #gMapLayers or "nil")
+    print("gMapObjects:", gMapObjects and #gMapObjects or "nil")
+    for i, obj in ipairs(map.collisionObjects) do
+        print(string.format("Object %d: x=%f, y=%f, width=%f, height=%f, type=%s",
+                            i, obj.x, obj.y, obj.width, obj.height, obj.type))
+    end
     
     -- Initialize Player
     player = Player:new(map.pixelWidth / 2, map.pixelHeight / 2, map)
@@ -176,19 +186,56 @@ function love.draw()
         titleScreen:draw()
     elseif gameState == "game" then
         camera:apply()
-        map:draw()  -- Eliminado pasar camera.x y camera.y
         
+        -- Dibujar el mapa
+        map:draw()
+        
+        -- Calcular la dirección de la luz basada en la posición del jugador
+        local centerX, centerY = love.graphics.getWidth() / 2, love.graphics.getHeight() / 2
+        local lightAngle = math.atan2(player.y - centerY, player.x - centerX)
+        local shadowOffsetX = math.cos(lightAngle) * SHADOW_OFFSET_X
+        local shadowOffsetY = math.sin(lightAngle) * SHADOW_OFFSET_Y
+        
+        -- Dibujar sombras de enemigos
+        love.graphics.setColor(0, 0, 0, 0.2)
+        for _, enemy in ipairs(enemies) do
+            if enemy.isActive then
+                love.graphics.ellipse("fill", 
+                    enemy.x + shadowOffsetX, 
+                    enemy.y + shadowOffsetY + enemy.size * 0.4, 
+                    enemy.size * 0.3, 
+                    enemy.size * 0.2)
+            end
+        end
+        
+        -- Dibujar sombra del jugador
         if not player.isDead then
-            player:draw()
+            love.graphics.ellipse("fill", 
+                player.x + shadowOffsetX, 
+                player.y + shadowOffsetY + player.size * 0.4, 
+                player.size * 0.3, 
+                player.size * 0.2)
         end
-        for _, bullet in ipairs(bullets) do
-            bullet:draw()
-        end
+        
+        love.graphics.setColor(1, 1, 1, 1)  -- Restaurar color
+        
+        -- Dibujar enemigos
         for _, enemy in ipairs(enemies) do
             if enemy.isActive then
                 enemy:draw()
             end
         end
+        
+        -- Dibujar jugador
+        if not player.isDead then
+            player:draw()
+        end
+        
+        -- Dibujar balas
+        for _, bullet in ipairs(bullets) do
+            bullet:draw()
+        end
+        
         camera:release()
 
         -- Draw experience orbs on a separate canvas

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="42" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="42" height="42" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="20">
  <tileset firstgid="1" name="lpc_terrain" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
   <image source="../gfx/terrain_atlas.png" width="1024" height="1024"/>
   <wangsets>
@@ -1850,7 +1850,10 @@
    <tile gid="113"/>
   </data>
  </layer>
- <layer id="9" name="cosas" width="42" height="42" locked="1">
+ <imagelayer id="12" name="Capa de Imagen 1" offsetx="169.757" offsety="208.931" repeatx="1" repeaty="1">
+  <image source="../images/sky.jpg" width="1024" height="768"/>
+ </imagelayer>
+ <layer id="9" name="cosas" width="42" height="42">
   <data>
    <tile/>
    <tile/>
@@ -2737,6 +2740,14 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="362"/>
+   <tile gid="363"/>
+   <tile gid="363"/>
+   <tile gid="363"/>
+   <tile gid="363"/>
+   <tile gid="363"/>
+   <tile gid="363"/>
+   <tile gid="364"/>
    <tile/>
    <tile/>
    <tile/>
@@ -2771,6 +2782,14 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="394"/>
+   <tile gid="395"/>
+   <tile gid="395"/>
+   <tile gid="395"/>
+   <tile gid="395"/>
+   <tile gid="395"/>
+   <tile gid="395"/>
+   <tile gid="396"/>
    <tile/>
    <tile/>
    <tile/>
@@ -2805,6 +2824,14 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="394"/>
+   <tile gid="395"/>
+   <tile gid="395"/>
+   <tile gid="395"/>
+   <tile gid="395"/>
+   <tile gid="395"/>
+   <tile gid="395"/>
+   <tile gid="396"/>
    <tile/>
    <tile/>
    <tile/>
@@ -2839,38 +2866,14 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="426"/>
+   <tile gid="427"/>
+   <tile gid="427"/>
+   <tile gid="427"/>
+   <tile gid="427"/>
+   <tile gid="427"/>
+   <tile gid="427"/>
+   <tile gid="428"/>
    <tile/>
    <tile/>
    <tile/>
@@ -3618,4 +3621,19 @@
    <tile/>
   </data>
  </layer>
+ <objectgroup id="11" name="Colisiones">
+  <object id="7" x="122.272" y="689.71" width="210.118" height="93.7816"/>
+  <object id="16" x="290.842" y="322.894" width="90.2203" height="92.5945">
+   <ellipse/>
+  </object>
+  <object id="17" x="59.3554" y="37.9875" width="104.466" height="115.15">
+   <ellipse/>
+  </object>
+  <object id="18" x="1088.58" y="518.767" width="97.3429" height="111.588">
+   <ellipse/>
+  </object>
+  <object id="19" x="1175.24" y="103.278" width="110.401" height="112.775">
+   <ellipse/>
+  </object>
+ </objectgroup>
 </map>
