@@ -29,13 +29,15 @@ function Player:new(x, y, map)
         activeBoomerang = nil,
         experience = 0,
         level = 1,
-        experienceToNextLevel = 100
+        experienceToNextLevel = 100,
+        missileCooldown = 5,
+        lastMissile = 0
     }
     setmetatable(this, Player)
     return this
 end
 
-function Player:update(dt, bullets, bulletPool, camera)
+function Player:update(dt, bullets, bulletPool, camera, enemies)
     -- Mover jugador
     local movement = self.speed * dt
     if love.keyboard.isDown("w") then
@@ -59,6 +61,9 @@ function Player:update(dt, bullets, bulletPool, camera)
 
     -- Boomerang
     Weapons.boomerang(self, bullets, bulletPool, camera)
+
+    -- Lanzamisiles
+    Weapons.missileLauncher(self, bullets, bulletPool, enemies)
 end
 
 function Player:draw()

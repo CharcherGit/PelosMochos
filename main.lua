@@ -72,12 +72,12 @@ function love.update(dt)
         titleScreen:update(dt)
     elseif gameState == "game" then
         -- Actualizar Jugador
-        player:update(dt, bullets, bulletPool, camera)
+        player:update(dt, bullets, bulletPool, camera, enemies)  -- Añadido 'enemies' aquí
 
         -- Actualizar Balas
         for i = #bullets, 1, -1 do
             local bullet = bullets[i]
-            bullet:update(dt, player)
+            bullet:update(dt, player, enemies)  -- Añadido 'enemies' aquí
             if not bullet:isAlive(map.pixelWidth, map.pixelHeight, player) then
                 table.insert(bulletPool, table.remove(bullets, i))
                 if bullet.bulletType == "boomerang" and bullet == player.activeBoomerang then
@@ -125,7 +125,9 @@ function love.update(dt)
                     if experienceOrb then
                         table.insert(experienceOrbs, experienceOrb)
                     end
-                    table.insert(bulletPool, table.remove(bullets, j))
+                    if bullet.bulletType ~= "missile" then  -- No eliminar misiles al impactar
+                        table.insert(bulletPool, table.remove(bullets, j))
+                    end
                     if enemy.isDead then
                         table.insert(enemyPool, table.remove(enemies, i))
                         break
